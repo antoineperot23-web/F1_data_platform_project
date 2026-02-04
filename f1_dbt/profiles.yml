@@ -7,6 +7,6 @@ f1_dbt_project:
       port: 5432
       schema: analytics
       threads: 1
-      type: postgres
+      type: postgres-f1
       user: f1_user
   target: dev

@@ -1,5 +1,25 @@
+version: '3.8'
+
+x-airflow-common:
+  &airflow-common
+  image: apache/airflow:2.9.3
+  environment:
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres-airflow:5432/airflow
+    AIRFLOW__CORE__FERNET_KEY: ''
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
+    AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth'
+  volumes:
+    - ./dags:/opt/airflow/dags
+    - ./logs:/opt/airflow/logs
+    - ./f1_dbt:/dbt_project  # Ton projet dbt F1
+    - ./scripts:/scripts     # Tes scripts Python ingestion
+  depends_on:
+    postgres-airflow:
+      condition: service_healthy
+
 services:
-  postgres:
+  postgres-f1:
     image: postgres:16-alpine
     container_name: f1_postgres
     environment:
@@ -9,8 +29,61 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_f1_data:/var/lib/postgresql/data
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U f1_user"]
+      interval: 5s
+      retries: 5
+  
+  postgres-airflow:
+    image: postgres:16-alpine
+    container_name: postgres-airflow
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - postgres_airflow_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U airflow"]
+      interval: 5s
+      retries: 5
+
+  airflow-init:
+    <<: *airflow-common
+    entrypoint: /bin/bash
+    container_name: airflow-init
+    command:
+      - -c
+      - |
+        airflow db init
+        airflow users create --username admin --firstname Admin --lastname User --role Admin --email admin@example.com --password airflow
+    environment:
+      <<: *airflow-common
+      _AIRFLOW_WWW_USER_USERNAME: admin
+      _AIRFLOW_WWW_USER_PASSWORD: airflow
+      _AIRFLOW_WWW_USER_CREATE: 'true'
+
+  airflow-webserver:
+    <<: *airflow-common
+    container_name: airflow-webserver
+    command: webserver
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl -f http://localhost:8080/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: always
+
+  airflow-scheduler:
+    <<: *airflow-common
+    container_name: airflow-scheduler
+    command: scheduler
+    restart: always
 
   dbt:
       image: ghcr.io/dbt-labs/dbt-postgres:1.9.0
@@ -24,4 +97,5 @@ services:
         - postgres
 
 volumes:
-  postgres_data:
+  postgres_f1_data:
+  postgres_airflow_data:
