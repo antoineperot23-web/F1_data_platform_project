@@ -1,0 +1,28 @@
+version: 2
+
+models:
+  - name: stg_laps
+    description: "Staging view for F1 laps data."
+    columns:
+      - name: session_key
+        description: "Unique identifier for each session."
+        tests:
+          - not_null
+      - name: driver_number
+        description: "Number assigned to each driver."
+        tests:
+          - not_null
+      - name: lap_number
+        description: "The lap number within the session."
+        tests:
+          - not_null
+      - name: lap_duration
+        description: "Duration of the lap in milliseconds."
+        tests:
+          - not_null
+      - name: is_pit_out_lap
+        description: "Indicator if the lap is a pit out lap."
+      - name: date_start
+        description: "Start date and time of the lap."
+        tests:
+          - not_null

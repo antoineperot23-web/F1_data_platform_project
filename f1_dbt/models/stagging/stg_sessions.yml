@@ -1,0 +1,34 @@
+version: 2
+
+models:
+  - name: stg_sessions
+    description: "Staging view for F1 sessions data."
+    columns:
+      - name: session_key
+        description: "Unique identifier for each session."
+        tests:
+          - not_null
+      - name: session_name
+        description: "Name of the session."
+      - name: circuit_key
+        description: "Unique identifier for the circuit where the session took place."
+      - name: session_type
+        description: "Type of the session (e.g., Practice, Qualifying, Race)."
+        tests:
+          - not_null
+      - name: date_start
+        description: "Start date and time of the session."
+        tests:
+          - not_null
+      - name: date_end
+        description: "End date and time of the session."
+        tests:
+          - not_null
+      - name: country_name
+        description: "Country where the session took place."
+      - name: location
+        description: "Location of the circuit where the session took place."
+      - name: year
+        description: "Year when the session took place."
+        tests:
+          - not_null

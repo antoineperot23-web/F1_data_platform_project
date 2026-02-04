@@ -1,0 +1,12 @@
+f1_dbt_project:
+  outputs:
+    dev:
+      dbname: f1_db
+      host: postgres
+      pass: f1_password
+      port: 5432
+      schema: analytics
+      threads: 1
+      type: postgres
+      user: f1_user
+  target: dev

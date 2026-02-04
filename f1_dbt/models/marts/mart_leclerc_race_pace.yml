@@ -1,0 +1,32 @@
+version: 2
+
+models:
+  - name: mart_leclerc_race_pace
+    description: "Mart model aggregating Leclerc's lap statistics per session."
+    columns:
+      - name: session_name
+        description: "Name of the racing session."
+        tests:
+          - not_null
+      - name: date_start
+        description: "Date of the racing session."
+        tests:
+          - not_null
+      - name: driver_number
+        description: "Number assigned to each driver."
+        tests:
+          - not_null
+      - name: name_acronym
+        description: "Acronym of the driver's name."
+        tests:
+          - not_null
+      - name: total_laps
+        description: "Total number of laps completed by the driver in the session."
+      - name: avg_lap_ms
+        description: "Average lap time in milliseconds for the driver in the session."
+      - name: best_lap_ms
+        description: "Best lap time in milliseconds for the driver in the session."
+      - name: worst_lap_ms
+        description: "Worst lap time in milliseconds for the driver in the session."
+      - name: consistency_ms
+        description: "Standard deviation of lap times in milliseconds for the driver in the session."

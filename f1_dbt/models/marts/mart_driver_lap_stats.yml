@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: mart_driver_lap_stats
+    description: "Mart model aggregating driver lap statistics per session."
+    columns:
+      - name: session_key
+        description: "Unique identifier for each session."
+        tests:
+          - not_null
+      - name: driver_number
+        description: "Number assigned to each driver."
+        tests:
+          - not_null
+      - name: avg_laps_ms
+        description: "Average lap time in milliseconds for the driver in the session."
+      - name: best_lap_ms
+        description: "Best lap time in milliseconds for the driver in the session."
+      - name: worst_lap_ms
+        description: "Worst lap time in milliseconds for the driver in the session."
+      - name: lap_count
+        description: "Total number of laps completed by the driver in the session."
+ 

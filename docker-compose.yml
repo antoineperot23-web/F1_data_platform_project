@@ -1,0 +1,27 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: f1_postgres
+    environment:
+      POSTGRES_USER: f1_user
+      POSTGRES_PASSWORD: f1_password  
+      POSTGRES_DB: f1_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  dbt:
+      image: ghcr.io/dbt-labs/dbt-postgres:1.9.0
+      container_name: f1_dbt
+      working_dir: /usr/app
+      volumes:
+        - ./f1_dbt:/usr/app
+      environment:
+        DBT_PROFILES_DIR: /usr/app
+      depends_on:
+        - postgres
+
+volumes:
+  postgres_data:

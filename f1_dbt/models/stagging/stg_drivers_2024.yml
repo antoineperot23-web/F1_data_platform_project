@@ -1,0 +1,42 @@
+version: 2
+
+models:
+  - name: stg_drivers_2024
+    description: "Staging view for F1 drivers information for the year 2024."
+    columns:
+      - name: driver_number
+        description: "The number assigned to the driver."
+        tests:
+          - not_null
+          - unique
+      - name : broadcast_name
+        description: "The name used for radio conversation"
+        tests:
+          - not_null
+          - unique
+      - name: full_name
+        description: "Full name of the driver."
+        tests:
+          - not_null
+          - unique
+      - name: name_acronym
+        description: "Acronym of the driver's name."
+        tests:
+          - not_null
+          - unique
+      - name: team_name
+        description: "Name of the team the driver belongs to."
+        tests:
+          - not_null
+      - name : first_name
+        description: "First name of the driver."
+        tests:
+          - not_null
+      - name : last_name
+        description: "Last name of the driver."
+        tests:
+          - not_null
+      - name: country_code 
+        description: "Country code of the driver."
+        tests:
+          - not_null
